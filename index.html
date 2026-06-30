@@ -405,6 +405,7 @@ class Component extends DCLogic {
       return Object.assign({}, s, { gwh: BIO.gwhOf(s.axis, s.inputs || {}), origin: 'user', fonte: s.fonte || 'Introduzido', local: s.local || ('Entrada · ' + s.distrito) });
     });
     this.setState({ sources: seed.concat(restored), showBasemap: !!this.props.mapaBase, ready: true });
+    setTimeout(() => this.populateSelects(), 0);
     this._poll = setInterval(() => {
       if (window.L && window.BIO && window.PT_DISTRICTS_GEOJSON && this._mapEl && !this.map) {
         clearInterval(this._poll);
@@ -424,9 +425,9 @@ class Component extends DCLogic {
 
   // Browser strips <sc-for> from inside <select>, so we inject <option>s directly.
   populateSelects() {
-    var el = this._formEl, BIO = window.BIO;
-    if (!el || !BIO) return;
-    var sels = el.querySelectorAll('select');
+    var BIO = window.BIO;
+    if (!BIO) return;
+    var sels = document.querySelectorAll('select');
     var distSel = sels[0], fsSel = sels[1];
     if (distSel && !distSel._populated) {
       distSel._populated = true;
